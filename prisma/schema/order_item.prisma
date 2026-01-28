@@ -1,0 +1,8 @@
+model Order_item {
+    item_id        String   @unique @default(uuid())
+    medicine_id    String
+    medicine       Medicine @relation(fields: [medicine_id], references: [medicine_id])
+    order_quantity Int
+    price          Decimal  @db.Decimal(10, 0)
+    createdAt      DateTime @default(now())
+}
