@@ -1,7 +1,7 @@
 model Reviews {
     review_id   String   @unique @default(uuid())
-    customer_id String
-    customer    User     @relation(fields: [customer_id], references: [user_id])
+    customer_email String
+    customer    User     @relation(fields: [customer_email], references: [email])
     medicine_id String
     medicine    Medicine @relation(fields: [medicine_id], references: [medicine_id])
     rating      Int      @default(5)

@@ -1,10 +1,10 @@
 model Orders {
-    order_id    String   @unique @default(ulid())
-    customer_id String
-    user        User     @relation(fields: [customer_id], references: [user_id])
-    status      Status   @default(PENDING)
-    total_bill  Decimal  @db.Decimal(10, 0)
-    order_date  DateTime @db.Timestamp()
+    order_id       String   @unique @default(ulid())
+    customer_email String
+    user           User     @relation(fields: [customer_email], references: [email])
+    status         Status   @default(PENDING)
+    total_bill     Decimal  @db.Decimal(10, 0)
+    order_date     DateTime @db.Timestamp()
 }
 
 enum Status {

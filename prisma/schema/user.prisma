@@ -1,11 +1,12 @@
 model User {
-    user_id       String    @id @unique
+    id            String    @id
     name          String
     email         String
     emailVerified Boolean   @default(false)
     image         String?
     createdAt     DateTime  @default(now())
     updatedAt     DateTime  @updatedAt
+    role          String?   @default("CUSTOMER")
     sessions      Session[]
     accounts      Account[]
     reviews       Reviews[]
@@ -24,7 +25,7 @@ model Session {
     ipAddress String?
     userAgent String?
     userId    String
-    user      User     @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@unique([token])
     @@index([userId])
@@ -36,7 +37,7 @@ model Account {
     accountId             String
     providerId            String
     userId                String
-    user                  User      @relation(fields: [userId], references: [user_id], onDelete: Cascade)
+    user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
     accessToken           String?
     refreshToken          String?
     idToken               String?
