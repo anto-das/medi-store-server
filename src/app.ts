@@ -3,12 +3,13 @@ import express, { Request, Response } from "express";
 import { auth } from "./lib/auth";
 import cors from "cors";
 import { medicineRoute } from "./modules/medicine/medicine.routes";
+import { sellerRouter } from "./modules/seller/seller.routes";
 const app = express();
 app.use(express.json());
 
 app.use(
   cors({
-    origin: process.env.APP_URL || process.env.LOCAL_URL,
+    origin: process.env.APP_URL || "http://localhost:3000",
     credentials: true,
   }),
 );
@@ -18,7 +19,8 @@ app.get("/", async (req: Request, res: Response) => {
 });
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-app.use("/api/medicines", medicineRoute);
+app.use("/api/medicine", medicineRoute);
+app.use("/api/seller", sellerRouter);
 
 app.use((req: Request, res: Response) => {
   res.status(404).send({
