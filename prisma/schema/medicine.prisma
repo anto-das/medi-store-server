@@ -1,6 +1,7 @@
 model Medicine {
     medicine_id    String       @unique @default(uuid())
     medicine_name  String       @db.VarChar(150)
+    manufacturer   String       @db.Text
     categoryId     String
     category       Categories   @relation(fields: [categoryId], references: [category_id])
     seller_id      String
@@ -10,5 +11,3 @@ model Medicine {
     orderItems     Order_item[]
     reviews        Reviews[]
 }
-
-

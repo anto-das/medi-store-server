@@ -1,8 +1,14 @@
 import { Router } from "express";
 import { sellerController } from "./seller.controller";
+import { UserRole } from "../../Types/roleCheck";
+import roleCheckerAuth from "../../middleware/auth";
 
 const router: Router = Router();
 
-router.post("/medicine", sellerController.postMedicine);
+router.post(
+  "/medicine",
+  roleCheckerAuth(UserRole.ADMIN,UserRole.SELLER),
+  sellerController.postMedicine,
+);
 
 export const sellerRouter = router;

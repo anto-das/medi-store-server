@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./prisma";
 import nodemailer from "nodemailer";
+import { status } from "../Types/status";
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -28,6 +29,11 @@ export const auth = betterAuth({
         type: "string",
         defaultValue: "CUSTOMER",
         required: true,
+      },
+      status: {
+        type: "string",
+        defaultValue: status.ACTIVE,
+        required: false,
       },
     },
   },

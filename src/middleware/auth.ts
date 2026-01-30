@@ -1,10 +1,43 @@
 import { NextFunction, Request, Response } from "express";
-import { UserRole } from "../types";
+import { auth as betterAuth } from "../lib/auth";
+import { UserRole } from "../Types/roleCheck";
 
-function auth(...roles:UserRole[]){
-    return async(req:Request,res:Response,next:NextFunction)=>{
-        
+function roleCheckerAuth(...roles: UserRole[]) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    // const session = await auth.api.getSession({
+    //   headers: fromNodeHeaders(req.headers),
+    // });
+    const session = await betterAuth.api.getSession({
+      headers: req.headers as any,
+    });
+    if (!session) {
+      res.status(401).send({
+        success: false,
+        message: "Unauthorized access!",
+      });
     }
+    if (!session?.user.emailVerified) {
+      res.status(403).send({
+        success: false,
+        message: "Forbidden access!",
+      });
+    }
+    req.user = {
+      id: session?.user.id as string,
+      name: session?.user.name as string,
+      email: session?.user.email as string,
+      emailVerified: session?.user.emailVerified as boolean,
+      role: session?.user.role as string,
+    };
+
+    if (roles.length && !roles.includes(req.user.role as UserRole)) {
+      res.status(403).send({
+        success: false,
+        message: "Forbidden access...!",
+      });
+    }
+    next();
+  };
 }
 
-export default auth
+export default roleCheckerAuth;
