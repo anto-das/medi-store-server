@@ -4,8 +4,10 @@ import { auth } from "./lib/auth";
 import cors from "cors";
 import { medicineRoute } from "./modules/medicine/medicine.routes";
 import { sellerRouter } from "./modules/seller/seller.routes";
+import dotenv from "dotenv";
 const app = express();
 app.use(express.json());
+dotenv.config();
 
 app.use(
   cors({
