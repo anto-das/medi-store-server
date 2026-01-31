@@ -10,5 +10,15 @@ router.post(
   roleCheckerAuth(UserRole.ADMIN),
   categoryController.postCategory,
 );
+router.get(
+  "/",
+  roleCheckerAuth(UserRole.ADMIN),
+  categoryController.getAllCategories,
+);
+router.delete(
+  "/:id",
+  roleCheckerAuth(UserRole.ADMIN),
+  categoryController.deleteCategories,
+);
 
 export const categoryRouter = router;

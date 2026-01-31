@@ -1,7 +1,13 @@
-const getMedicine = async () =>{
-    return "this is medicine route...."
-}
+import { prisma } from "../../lib/prisma";
 
-export  const medicineService ={
-    getMedicine
-}
+const getMedicine = async () => {
+  const result = await prisma.medicine.findMany({});
+  return result.map((item) => {
+    const { categoryId, ...res } = item;
+    return res;
+  });
+};
+
+export const medicineService = {
+  getMedicine,
+};

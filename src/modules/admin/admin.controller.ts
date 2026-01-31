@@ -15,6 +15,27 @@ const getUsers = async (req: Request, res: Response) => {
   }
 };
 
+const updateUserStatus = async (req: Request, res: Response) => {
+  try {
+    const userId = req.params.id;
+    const data = req.body;
+    const result = await adminService.updateUserStatus(userId as string, data);
+    res.status(200).send({
+      success: true,
+      message: "Status updated successfully...",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "update user status error": e,
+      },
+    });
+  }
+};
+
 export const adminController = {
   getUsers,
+  updateUserStatus,
 };

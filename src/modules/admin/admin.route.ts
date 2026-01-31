@@ -1,8 +1,15 @@
 import { Router } from "express";
 import { adminController } from "./admin.controller";
+import roleCheckerAuth from "../../middleware/auth";
+import { UserRole } from "../../Types/roleCheck";
 
 const route: Router = Router();
 
 route.get("/users", adminController.getUsers);
+route.patch(
+  "/users/:id",
+  roleCheckerAuth(UserRole.ADMIN),
+  adminController.updateUserStatus,
+);
 
 export const adminRouter = route;

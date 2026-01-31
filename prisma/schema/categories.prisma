@@ -1,16 +1,5 @@
 model Categories {
-    category_id   String        @unique @default(uuid())
-    category_type Medi_Category @default(ANTIBIOTICS)
-
-    medicines Medicine[]
-}
-
-enum Medi_Category {
-    ANTIBIOTICS
-    PAIN
-    VITAMINS
-    CARDIOLOGY
-    DERMATOLOGY
-    DIABETES
-    HERBAL
+    category_id   String     @unique @default(uuid())
+    category_type String     @default("ANTIBIOTICS")
+    medicines     Medicine[]
 }

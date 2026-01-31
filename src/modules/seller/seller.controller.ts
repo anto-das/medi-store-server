@@ -4,8 +4,10 @@ import { sellerService } from "./seller.service";
 const postMedicine = async (req: Request, res: Response) => {
   try {
     const body = req.body;
+    const sellerId = req.user?.id;
+    const category_id = body.category
     // console.log(body);
-    const result = await sellerService.postMedicine(body);
+    const result = await sellerService.postMedicine(body, sellerId as string);
     console.log(result);
     res.status(200).send({
       success: true,
@@ -19,6 +21,7 @@ const postMedicine = async (req: Request, res: Response) => {
         "seller medicine created er error:": err,
       },
     });
+    console.log(err)
   }
 };
 

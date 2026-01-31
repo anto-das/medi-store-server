@@ -1,9 +1,9 @@
 model Reviews {
-    review_id   String   @unique @default(uuid())
+    review_id      String   @unique @default(uuid())
     customer_email String
-    customer    User     @relation(fields: [customer_email], references: [email])
-    medicine_id String
-    medicine    Medicine @relation(fields: [medicine_id], references: [medicine_id])
-    rating      Int      @default(5)
-    comment     String   @db.Text
+    customer       User     @relation(fields: [customer_email], references: [email])
+    medicine_id    String
+    medicine       Medicine @relation(fields: [medicine_id], references: [medicine_id])
+    rating         Int      @default(5)
+    comment        String   @db.Text
 }
