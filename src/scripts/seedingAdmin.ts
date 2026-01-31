@@ -6,12 +6,11 @@ import bcrypt from "bcryptjs";
 dotenv.config();
 
 async function seedAdmin() {
-  const hashedPass = await bcrypt.hash(process.env.ADMIN_PASS as string, 10);
   try {
     const adminData = {
       name: process.env.ADMIN_NAME as string,
       email: "antodasahir@gmail.com",
-      password: hashedPass as string,
+      password: process.env.ADMIN_PASS as string,
       role: UserRole.ADMIN,
       emailVerified: true,
     };
