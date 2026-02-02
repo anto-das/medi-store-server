@@ -1,11 +1,19 @@
-import { Medi_Category, Medicine } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const postMedicine = async (data: any, seller_id: string) => {
-  // console.log("service", { ...data, seller_id });
+  const categoryName = await prisma.categories.findUnique({
+    where: {
+      category_id: data.categoryId,
+    },
+    select: {
+      category_type: true,
+    },
+  });
+  console.log(categoryName?.category_type);
   const result = await prisma.medicine.create({
     data: {
       ...data,
+      category_name: categoryName?.category_type,
       seller_id,
     },
   });
