@@ -20,6 +20,15 @@ const postMedicine = async (data: any, seller_id: string) => {
   return result;
 };
 
+const deleteMedicine = async (medicine_id: string) => {
+  return await prisma.medicine.delete({
+    where: {
+      medicine_id,
+    },
+  });
+};
+
 export const sellerService = {
   postMedicine,
+  deleteMedicine,
 };

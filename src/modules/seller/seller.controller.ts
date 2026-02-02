@@ -23,6 +23,26 @@ const postMedicine = async (req: Request, res: Response) => {
   }
 };
 
+const deleteMedicine = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await sellerService.deleteMedicine(id as string);
+    res.status(200).send({
+      success: true,
+      message: "Medicine deleted successfully..",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "delete medicine error": e,
+      },
+    });
+  }
+};
+
 export const sellerController = {
   postMedicine,
+  deleteMedicine,
 };

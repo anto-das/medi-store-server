@@ -7,8 +7,14 @@ const router: Router = Router();
 
 router.post(
   "/medicine",
-  roleCheckerAuth(UserRole.ADMIN,UserRole.SELLER),
+  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
   sellerController.postMedicine,
+);
+
+router.delete(
+  "/:id",
+  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
+  sellerController.deleteMedicine,
 );
 
 export const sellerRouter = router;
