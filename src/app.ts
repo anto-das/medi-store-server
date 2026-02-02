@@ -7,6 +7,7 @@ import { sellerRouter } from "./modules/seller/seller.routes";
 import dotenv from "dotenv";
 import { adminRouter } from "./modules/admin/admin.route";
 import { categoryRouter } from "./modules/categories/category.route";
+import { userRouter } from "./modules/authentication/user.route";
 const app = express();
 app.use(express.json());
 dotenv.config();
@@ -23,6 +24,7 @@ app.get("/", async (req: Request, res: Response) => {
 });
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
+app.use("/api/own", userRouter);
 app.use("/api/medicine", medicineRoute);
 app.use("/api/seller", sellerRouter);
 app.use("/api/admin", adminRouter);
