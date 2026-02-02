@@ -8,6 +8,15 @@ const getMedicine = async () => {
   });
 };
 
+const getSingleMedicine = async (medicine_id: string) => {
+  return prisma.medicine.findUnique({
+    where: {
+      medicine_id,
+    },
+  });
+};
+
 export const medicineService = {
   getMedicine,
+  getSingleMedicine,
 };
