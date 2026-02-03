@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { sellerService } from "./seller.service";
+import { success } from "better-auth";
 
 const postMedicine = async (req: Request, res: Response) => {
   try {
@@ -20,6 +21,26 @@ const postMedicine = async (req: Request, res: Response) => {
       },
     });
     console.log(err);
+  }
+};
+
+const updatedMedicine = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const body = req.body;
+    const result = await sellerService.updatedMedicine(id as string, body);
+    res.status(201).send({
+      success: true,
+      message: "updated your defined medicine successfully...",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "updated medicine error": e,
+      },
+    });
   }
 };
 
@@ -44,5 +65,6 @@ const deleteMedicine = async (req: Request, res: Response) => {
 
 export const sellerController = {
   postMedicine,
+  updatedMedicine,
   deleteMedicine,
 };

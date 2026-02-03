@@ -11,6 +11,12 @@ router.post(
   sellerController.postMedicine,
 );
 
+router.put(
+  "/medicine/:id",
+  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
+  sellerController.updatedMedicine,
+);
+
 router.delete(
   "/:id",
   roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
