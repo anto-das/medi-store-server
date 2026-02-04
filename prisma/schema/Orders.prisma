@@ -1,0 +1,20 @@
+model Orders {
+    order_id       String       @unique @default(ulid())
+    customer_email String
+    user           User         @relation(fields: [customer_email], references: [email])
+    status         Status       @default(PENDING)
+    total_bill     Decimal      @db.Decimal(10, 0)
+    order_date     DateTime     @default(now()) @db.Timestamp()
+    orderItems     Order_item[]
+}
+
+enum Status {
+    PENDING
+    PROCESSING
+    SHIPPED
+    DELIVERED
+}
+
+// user jokhon aisha kono medicine er cart eh click korbe tokhon eita order_item table eh akta table create hobe.
+
+// r jodi order confirm kore tokhon tahole oita order table confirm hobe. thats the logic

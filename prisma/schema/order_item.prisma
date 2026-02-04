@@ -1,5 +1,7 @@
 model Order_item {
     item_id        String   @unique @default(uuid())
+    order_id       String
+    order          Orders   @relation(fields: [order_id], references: [order_id])
     medicine_id    String
     medicine       Medicine @relation(fields: [medicine_id], references: [medicine_id])
     order_quantity Int

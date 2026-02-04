@@ -13,12 +13,14 @@ function roleCheckerAuth(...roles: UserRole[]) {
           success: false,
           message: "Unauthorized access!",
         });
+        return;
       }
       if (!session?.user.emailVerified) {
         res.status(403).send({
           success: false,
           message: "Forbidden access!",
         });
+        return;
       }
       req.user = {
         id: session?.user.id as string,
@@ -33,6 +35,7 @@ function roleCheckerAuth(...roles: UserRole[]) {
           success: false,
           message: "Forbidden access...!",
         });
+        return;
       }
       next();
     } catch (error) {

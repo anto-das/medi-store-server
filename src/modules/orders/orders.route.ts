@@ -1,0 +1,19 @@
+import { Router } from "express";
+import { orderController } from "./orders.controller";
+import roleCheckerAuth from "../../middleware/auth";
+import { UserRole } from "../../Types/roleCheck";
+
+const router: Router = Router();
+
+router.post(
+  "/",
+  roleCheckerAuth(UserRole.CUSTOMER),
+  orderController.createOrders,
+);
+router.get(
+  "/",
+  roleCheckerAuth(UserRole.CUSTOMER),
+  orderController.getAllOrders,
+);
+
+export const orderRouter = router;
