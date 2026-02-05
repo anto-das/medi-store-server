@@ -22,7 +22,7 @@ const createOrders = async (req: Request, res: Response) => {
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const result = await orderService.getAllOrders();
-    console.log(result)
+    console.log(result);
     res.status(200).send({
       success: true,
       message: "Retrieved all orders data successfully..",
@@ -38,7 +38,27 @@ const getAllOrders = async (req: Request, res: Response) => {
   }
 };
 
+const getSingleOrder = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await orderService.getSingleOrder(id as string);
+    res.status(200).send({
+      success: true,
+      message: "Retrieved data successfully get by id..",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: true,
+      message: {
+        "get single order error": e,
+      },
+    });
+  }
+};
+
 export const orderController = {
   createOrders,
   getAllOrders,
+  getSingleOrder,
 };

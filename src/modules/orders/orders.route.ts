@@ -16,4 +16,10 @@ router.get(
   orderController.getAllOrders,
 );
 
+router.get(
+  "/:id",
+  roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
+  orderController.getSingleOrder,
+);
+
 export const orderRouter = router;
