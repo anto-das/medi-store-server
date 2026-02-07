@@ -1,20 +1,32 @@
 -- CreateEnum
-CREATE TYPE "Medi_Category" AS ENUM ('ANTIBIOTICS', 'PAIN', 'VITAMINS', 'CARDIOLOGY', 'DERMATOLOGY', 'DIABETES', 'HERBAL');
-
--- CreateEnum
 CREATE TYPE "Status" AS ENUM ('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED');
+
+-- CreateTable
+CREATE TABLE "Orders" (
+    "order_id" TEXT NOT NULL,
+    "customer_email" TEXT NOT NULL,
+    "seller_id" TEXT NOT NULL,
+    "status" "Status" NOT NULL DEFAULT 'PENDING',
+    "total_bill" DECIMAL(10,0) NOT NULL,
+    "order_date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "Orders_pkey" PRIMARY KEY ("order_id")
+);
 
 -- CreateTable
 CREATE TABLE "Categories" (
     "category_id" TEXT NOT NULL,
-    "category" "Medi_Category" NOT NULL DEFAULT 'ANTIBIOTICS'
+    "category_type" TEXT NOT NULL DEFAULT 'ANTIBIOTICS'
 );
 
 -- CreateTable
 CREATE TABLE "Medicine" (
     "medicine_id" TEXT NOT NULL,
     "medicine_name" VARCHAR(150) NOT NULL,
-    "categoryId" TEXT NOT NULL,
+    "manufacturer" TEXT NOT NULL,
+    "medi_img" TEXT NOT NULL,
+    "category_name" TEXT NOT NULL DEFAULT 'ANTIBIOTICS',
+    "categoryId" TEXT,
     "seller_id" TEXT NOT NULL,
     "price" DECIMAL(10,0) NOT NULL,
     "stock_quantity" INTEGER NOT NULL DEFAULT 0,
@@ -22,17 +34,9 @@ CREATE TABLE "Medicine" (
 );
 
 -- CreateTable
-CREATE TABLE "Orders" (
-    "order_id" TEXT NOT NULL,
-    "customer_id" TEXT NOT NULL,
-    "status" "Status" NOT NULL DEFAULT 'PENDING',
-    "total_bill" DECIMAL(10,0) NOT NULL,
-    "order_date" TIMESTAMP NOT NULL
-);
-
--- CreateTable
 CREATE TABLE "Order_item" (
     "item_id" TEXT NOT NULL,
+    "order_id" TEXT NOT NULL,
     "medicine_id" TEXT NOT NULL,
     "order_quantity" INTEGER NOT NULL,
     "price" DECIMAL(10,0) NOT NULL,
@@ -42,7 +46,7 @@ CREATE TABLE "Order_item" (
 -- CreateTable
 CREATE TABLE "Reviews" (
     "review_id" TEXT NOT NULL,
-    "customer_id" TEXT NOT NULL,
+    "customer_email" TEXT NOT NULL,
     "medicine_id" TEXT NOT NULL,
     "rating" INTEGER NOT NULL DEFAULT 5,
     "comment" TEXT NOT NULL
@@ -50,16 +54,17 @@ CREATE TABLE "Reviews" (
 
 -- CreateTable
 CREATE TABLE "user" (
-    "user_id" TEXT NOT NULL,
+    "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "emailVerified" BOOLEAN NOT NULL DEFAULT false,
     "image" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "role" TEXT DEFAULT 'CUSTOMER',
+    "role" TEXT NOT NULL DEFAULT 'CUSTOMER',
+    "status" TEXT DEFAULT 'ACTIVE',
 
-    CONSTRAINT "user_pkey" PRIMARY KEY ("user_id")
+    CONSTRAINT "user_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -114,9 +119,6 @@ CREATE UNIQUE INDEX "Categories_category_id_key" ON "Categories"("category_id");
 CREATE UNIQUE INDEX "Medicine_medicine_id_key" ON "Medicine"("medicine_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Orders_order_id_key" ON "Orders"("order_id");
-
--- CreateIndex
 CREATE UNIQUE INDEX "Order_item_item_id_key" ON "Order_item"("item_id");
 
 -- CreateIndex
@@ -138,22 +140,25 @@ CREATE INDEX "account_userId_idx" ON "account"("userId");
 CREATE INDEX "verification_identifier_idx" ON "verification"("identifier");
 
 -- AddForeignKey
-ALTER TABLE "Medicine" ADD CONSTRAINT "Medicine_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Categories"("category_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Orders" ADD CONSTRAINT "Orders_customer_email_fkey" FOREIGN KEY ("customer_email") REFERENCES "user"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Orders" ADD CONSTRAINT "Orders_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "user"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Medicine" ADD CONSTRAINT "Medicine_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "Categories"("category_id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Order_item" ADD CONSTRAINT "Order_item_order_id_fkey" FOREIGN KEY ("order_id") REFERENCES "Orders"("order_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Order_item" ADD CONSTRAINT "Order_item_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "Medicine"("medicine_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_customer_id_fkey" FOREIGN KEY ("customer_id") REFERENCES "user"("user_id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_customer_email_fkey" FOREIGN KEY ("customer_email") REFERENCES "user"("email") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Reviews" ADD CONSTRAINT "Reviews_medicine_id_fkey" FOREIGN KEY ("medicine_id") REFERENCES "Medicine"("medicine_id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "session" ADD CONSTRAINT "session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("user_id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "account" ADD CONSTRAINT "account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;

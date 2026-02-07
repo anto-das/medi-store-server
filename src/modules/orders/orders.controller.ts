@@ -57,8 +57,19 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
+const deleteOrder = async (req: Request, res: Response) => {
+  // const email = req.body.email;
+  const id = req.params.id;
+  const result = await orderService.deleteOrder(id as string);
+  res.status(200).send({
+    success: true,
+    data:result,
+  });
+};
+
 export const orderController = {
   createOrders,
   getAllOrders,
   getSingleOrder,
+  deleteOrder,
 };

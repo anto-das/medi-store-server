@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Orders" ALTER COLUMN "order_date" SET DEFAULT CURRENT_TIMESTAMP;

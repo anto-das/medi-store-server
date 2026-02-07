@@ -10,26 +10,49 @@ const createOrders = async (
     }[];
   },
 ) => {
-  console.log(data);
   const result = await prisma.$transaction(async (tx) => {
-    const order = await tx.orders.create({
-      data: {
-        customer_email: data.customer_email,
-        total_bill: data.total_bill,
-      },
-    });
-    await tx.order_item.createMany({
-      data: data.orderItems.map((item) => ({
-        order_id: order.order_id,
-        medicine_id: item.medicine_id,
-        order_quantity: item.order_quantity,
-        price: item.price,
-      })),
-    });
-    return await tx.orders.findUnique({
-      where: { order_id: order.order_id },
-      include: { orderItems: true },
-    });
+    const sellerIds = await Promise.all(
+      data.orderItems.map(async (item) => {
+        return await tx.medicine.findUnique({
+          where: {
+            medicine_id: item.medicine_id,
+          },
+          select: {
+            seller_id: true,
+          },
+        });
+      }),
+    );
+
+    // console.log(res)
+
+    //     [
+    //   { seller_id: '94kYQySfjY9q3igVpn8zSYAnLp7EaGbl' },
+    //   { seller_id: '94kYQySfjY9q3igVpn8zSYAnLp7EaGbl' },
+    //   { seller_id: '94kYQySfjY9q3igVpn8zSYAnLp7EaGbl' }
+    // ]
+
+    // for (const sellerId of sellerIds) {
+    //   const order = await tx.orders.create({
+    //     data: {
+    //       customer_email: data.customer_email,
+    //       total_bill: data.total_bill,
+    //       seller_id: sellerId?.seller_id,
+    //     },
+    //   });
+    //   await tx.order_item.createMany({
+    //     data: data.orderItems.map((item) => ({
+    //       order_id: order.order_id,
+    //       medicine_id: item.medicine_id,
+    //       order_quantity: item.order_quantity,
+    //       price: item.price,
+    //     })),
+    //   });
+    //   return await tx.orders.findUnique({
+    //     where: { order_id: order.order_id },
+    //     include: { orderItems: true },
+    //   });
+    // }
   });
   return result;
 };
@@ -59,8 +82,18 @@ const getSingleOrder = async (order_id: string) => {
   });
 };
 
+const deleteOrder = async (id: string) => {
+  const result = await prisma.orders.deleteMany({
+    where: {
+      order_id: id,
+    },
+  });
+  return result;
+};
+
 export const orderService = {
   createOrders,
   getAllOrders,
   getSingleOrder,
+  deleteOrder,
 };

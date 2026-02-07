@@ -1,7 +1,8 @@
 model Orders {
-    order_id       String       @unique @default(ulid())
+    order_id       String       @id @default(ulid())
     customer_email String
     user           User         @relation(fields: [customer_email], references: [email])
+    seller_id      String
     status         Status       @default(PENDING)
     total_bill     Decimal      @db.Decimal(10, 0)
     order_date     DateTime     @default(now()) @db.Timestamp()

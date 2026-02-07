@@ -22,4 +22,10 @@ router.get(
   orderController.getSingleOrder,
 );
 
+router.delete(
+  "/:id",
+  roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
+  orderController.deleteOrder,
+);
+
 export const orderRouter = router;

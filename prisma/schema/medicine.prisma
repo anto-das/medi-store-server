@@ -1,5 +1,5 @@
 model Medicine {
-    medicine_id    String       @unique @default(uuid())
+    medicine_id    String       @id @default(uuid())
     medicine_name  String       @db.VarChar(150)
     manufacturer   String       @db.Text
     medi_img       String
@@ -10,6 +10,6 @@ model Medicine {
     price          Decimal      @db.Decimal(10, 0)
     stock_quantity Int          @default(0)
     createdAt      DateTime     @default(now())
-    orderItems     Order_item[]
     reviews        Reviews[]
+    orderItems     Order_item[]
 }
