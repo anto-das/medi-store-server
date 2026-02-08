@@ -32,7 +32,7 @@ const createOrders = async (
       const order = await tx.orders.create({
         data: {
           customer_email,
-          total_bill: Number(data.total_bill),
+          total_bill: data.total_bill,
           seller_id: sellerId?.seller_id as string,
         },
       });
@@ -41,7 +41,7 @@ const createOrders = async (
           order_id: order.order_id,
           medicine_id: item.medicine_id,
           order_quantity: item.order_quantity,
-          price: Number(item.price),
+          price: item.price,
         })),
       });
       return await tx.orders.findUnique({
@@ -61,6 +61,7 @@ const getAllOrders = async (email: string) => {
     include: {
       orderItems: {
         select: {
+          item_id: true,
           order_id: true,
           order_quantity: true,
           price: true,
@@ -82,18 +83,42 @@ const getSingleOrder = async (order_id: string) => {
 };
 
 const updateOrder = async (order_id: string, data: any) => {
-  const result = await prisma.orders.update({
-    where: {
-      order_id,
-    },
-    data: {
-      
-    },
-    include: {
-      orderItems: true,
-    },
+  // console.log({ ...data.orderItems });
+  return await prisma.$transaction(async (tx) => {
+    await tx.orders.update({
+      where: {
+        order_id,
+      },
+      data: {
+        total_bill: data.total_bill,
+      },
+    });
+
+    await Promise.all(
+      data.orderItems.map((item: any) => {
+        return tx.order_item.update({
+          where: { item_id: item.item_id },
+          data: {
+            order_quantity: item.order_quantity,
+            price: Number(item.price),
+          },
+        });
+      }),
+    );
+
+    return await prisma.orders.findUnique({
+      where: { order_id },
+      include: {
+        orderItems: {
+          select: {
+            order_id: true,
+            order_quantity: true,
+            price: true,
+          },
+        },
+      },
+    });
   });
-  return result;
 };
 
 const deleteOrder = async (id: string) => {

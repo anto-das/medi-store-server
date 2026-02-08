@@ -25,7 +25,7 @@ const createOrders = async (req: Request, res: Response) => {
 const getAllOrders = async (req: Request, res: Response) => {
   try {
     const result = await orderService.getAllOrders(req.user?.email as string);
-    console.log(result);
+    // console.log(result);
     res.status(200).send({
       success: true,
       message: "Retrieved all orders data successfully..",
