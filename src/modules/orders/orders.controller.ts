@@ -3,7 +3,10 @@ import { orderService } from "./orders.service";
 
 const createOrders = async (req: Request, res: Response) => {
   try {
-    const result = await orderService.createOrders(req.body);
+    const result = await orderService.createOrders(
+      req.body,
+      req.user?.email as string,
+    );
     res.status(200).send({
       success: true,
       message: "create orders successfully..",
@@ -21,7 +24,7 @@ const createOrders = async (req: Request, res: Response) => {
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
-    const result = await orderService.getAllOrders();
+    const result = await orderService.getAllOrders(req.user?.email as string);
     console.log(result);
     res.status(200).send({
       success: true,
@@ -57,13 +60,32 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
+const updateOrder = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await orderService.updateOrder(id as string, req.body);
+    res.status(200).send({
+      success: true,
+      message: "update your order successfully..",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "update order error": e,
+      },
+    });
+  }
+};
+
 const deleteOrder = async (req: Request, res: Response) => {
   // const email = req.body.email;
   const id = req.params.id;
   const result = await orderService.deleteOrder(id as string);
   res.status(200).send({
     success: true,
-    data:result,
+    data: result,
   });
 };
 
@@ -71,5 +93,6 @@ export const orderController = {
   createOrders,
   getAllOrders,
   getSingleOrder,
+  updateOrder,
   deleteOrder,
 };

@@ -2,13 +2,17 @@ import { Orders } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 const createOrders = async (
-  data: Omit<Orders, "order_id" | "status" | "order_date"> & {
+  data: Omit<
+    Orders,
+    "order_id" | "status" | "order_date" | "customer_email"
+  > & {
     orderItems: {
       medicine_id: string;
       order_quantity: number;
       price: string | number;
     }[];
   },
+  customer_email: string,
 ) => {
   const result = await prisma.$transaction(async (tx) => {
     const sellerIds = await Promise.all(
@@ -27,8 +31,8 @@ const createOrders = async (
     for (const sellerId of sellerIds) {
       const order = await tx.orders.create({
         data: {
-          customer_email: data.customer_email,
-          total_bill: data.total_bill,
+          customer_email,
+          total_bill: Number(data.total_bill),
           seller_id: sellerId?.seller_id as string,
         },
       });
@@ -37,7 +41,7 @@ const createOrders = async (
           order_id: order.order_id,
           medicine_id: item.medicine_id,
           order_quantity: item.order_quantity,
-          price: item.price,
+          price: Number(item.price),
         })),
       });
       return await tx.orders.findUnique({
@@ -49,8 +53,11 @@ const createOrders = async (
   return result;
 };
 
-const getAllOrders = async () => {
+const getAllOrders = async (email: string) => {
   return await prisma.orders.findMany({
+    where: {
+      customer_email: email,
+    },
     include: {
       orderItems: {
         select: {
@@ -74,6 +81,21 @@ const getSingleOrder = async (order_id: string) => {
   });
 };
 
+const updateOrder = async (order_id: string, data: any) => {
+  const result = await prisma.orders.update({
+    where: {
+      order_id,
+    },
+    data: {
+      
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+  return result;
+};
+
 const deleteOrder = async (id: string) => {
   const result = await prisma.orders.deleteMany({
     where: {
@@ -87,5 +109,6 @@ export const orderService = {
   createOrders,
   getAllOrders,
   getSingleOrder,
+  updateOrder,
   deleteOrder,
 };

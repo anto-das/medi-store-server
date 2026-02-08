@@ -22,6 +22,12 @@ router.get(
   orderController.getSingleOrder,
 );
 
+router.put(
+  "/:id",
+  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
+  orderController.updateOrder,
+);
+
 router.delete(
   "/:id",
   roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
