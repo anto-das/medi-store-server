@@ -11,6 +11,12 @@ router.post(
   sellerController.postMedicine,
 );
 
+router.get(
+  "/orders",
+  roleCheckerAuth(UserRole.SELLER),
+  sellerController.getSellerOrders,
+);
+
 router.put(
   "/medicine/:id",
   roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),

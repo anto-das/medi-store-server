@@ -31,6 +31,17 @@ const updatedMedicine = async (medicine_id: string, data: any) => {
   });
 };
 
+const getSellerOrders = async (seller_id: string) => {
+  return await prisma.orders.findMany({
+    where: {
+      seller_id,
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+};
+
 const deleteMedicine = async (medicine_id: string) => {
   return await prisma.medicine.delete({
     where: {
@@ -41,6 +52,7 @@ const deleteMedicine = async (medicine_id: string) => {
 
 export const sellerService = {
   postMedicine,
+  getSellerOrders,
   updatedMedicine,
   deleteMedicine,
 };

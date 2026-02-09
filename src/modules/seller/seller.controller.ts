@@ -24,6 +24,25 @@ const postMedicine = async (req: Request, res: Response) => {
   }
 };
 
+const getSellerOrders = async (req: Request, res: Response) => {
+  try {
+    const seller_id = req.user?.id;
+    const result = await sellerService.getSellerOrders(seller_id as string);
+    res.status(200).send({
+      success: true,
+      message: "Retrieved your orders successfully..",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "get seller order message": e,
+      },
+    });
+  }
+};
+
 const updatedMedicine = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
@@ -65,6 +84,7 @@ const deleteMedicine = async (req: Request, res: Response) => {
 
 export const sellerController = {
   postMedicine,
+  getSellerOrders,
   updatedMedicine,
   deleteMedicine,
 };

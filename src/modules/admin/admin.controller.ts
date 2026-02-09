@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { adminService } from "./admin.service";
 import { success } from "better-auth";
+import { User } from "../../../generated/prisma/client";
 
 const getUsers = async (req: Request, res: Response) => {
   try {

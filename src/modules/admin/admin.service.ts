@@ -7,12 +7,18 @@ const getUsers = async () => {
 };
 
 const updateUserStatus = async (userId: string, data: User) => {
-  const result = await prisma.user.update({
+  const result = await prisma.user.upsert({
     where: {
       id: userId,
     },
-    data: {
-      ...data,
+    update: {
+      status: data.status,
+    },
+    create: {
+      id: userId,
+      email: data.email,
+      name: data.name,
+      status: data.status,
     },
   });
   return result;
