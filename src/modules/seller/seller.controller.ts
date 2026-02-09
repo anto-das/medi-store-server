@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { sellerService } from "./seller.service";
 import { success } from "better-auth";
+import { Status } from "../../../generated/prisma/enums";
 
 const postMedicine = async (req: Request, res: Response) => {
   try {
@@ -38,6 +39,29 @@ const getSellerOrders = async (req: Request, res: Response) => {
       success: false,
       message: {
         "get seller order message": e,
+      },
+    });
+  }
+};
+
+const updateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const seller_id = req.params.id;
+    const status = req.body.status;
+    const result = await sellerService.updateOrderStatus(
+      seller_id as string,
+      status,
+    );
+    res.status(201).send({
+      success: true,
+      message: "status updated successfully..",
+      data: result,
+    });
+  } catch (e) {
+    res.status(500).send({
+      success: false,
+      message: {
+        "update order status error": e,
       },
     });
   }
@@ -85,6 +109,7 @@ const deleteMedicine = async (req: Request, res: Response) => {
 export const sellerController = {
   postMedicine,
   getSellerOrders,
+  updateOrderStatus,
   updatedMedicine,
   deleteMedicine,
 };

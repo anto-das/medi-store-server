@@ -17,6 +17,12 @@ router.get(
   sellerController.getSellerOrders,
 );
 
+router.patch(
+  "/orders/:id",
+  roleCheckerAuth(UserRole.SELLER),
+  sellerController.updateOrderStatus,
+);
+
 router.put(
   "/medicine/:id",
   roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),

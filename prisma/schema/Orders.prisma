@@ -16,6 +16,3 @@ enum Status {
     DELIVERED
 }
 
-// user jokhon aisha kono medicine er cart eh click korbe tokhon eita order_item table eh akta table create hobe.
-
-// r jodi order confirm kore tokhon tahole oita order table confirm hobe. thats the logic
