@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { adminService } from "./admin.service";
 import { success } from "better-auth";
 import { User } from "../../../generated/prisma/client";
 
-const getUsers = async (req: Request, res: Response) => {
+const getUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const result = await adminService.getUsers();
     res.status(200).send({
@@ -12,11 +12,15 @@ const getUsers = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err: any) {
-    console.log("get all user error:....", err);
+    next(err);
   }
 };
 
-const updateUserStatus = async (req: Request, res: Response) => {
+const updateUserStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const userId = req.params.id;
     const data = req.body;
@@ -26,13 +30,8 @@ const updateUserStatus = async (req: Request, res: Response) => {
       message: "Status updated successfully...",
       data: result,
     });
-  } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "update user status error": e,
-      },
-    });
+  } catch (e: any) {
+    next(e);
   }
 };
 

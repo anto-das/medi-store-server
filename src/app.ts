@@ -9,6 +9,7 @@ import { adminRouter } from "./modules/admin/admin.route";
 import { categoryRouter } from "./modules/categories/category.route";
 import { userRouter } from "./modules/authentication/user.route";
 import { orderRouter } from "./modules/orders/orders.route";
+import globalErrorHandler from "./middleware/globalErrorHandler";
 const app = express();
 app.use(express.json());
 dotenv.config();
@@ -39,5 +40,7 @@ app.use((req: Request, res: Response) => {
     url: req.url,
   });
 });
+
+app.use(globalErrorHandler);
 
 export default app;
