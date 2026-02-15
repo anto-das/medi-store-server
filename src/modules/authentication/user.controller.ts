@@ -1,10 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 
-const getMe = async (req: Request, res: Response) => {
+const getMe = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const email = req.user?.email;
-    console.log(email)
+    console.log(email);
     // console.log(req)
     const result = await userService.getMe(email as string);
     res.status(200).send({
@@ -12,13 +12,13 @@ const getMe = async (req: Request, res: Response) => {
       message: "Retrieved your info successfully..",
       data: result,
     });
-  } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "get me error": e,
-      },
-    });
+  } catch (e: any) {
+    next(
+      res.status(500).send({
+        success: false,
+        message: e.message,
+      }),
+    );
   }
 };
 

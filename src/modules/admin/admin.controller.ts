@@ -31,6 +31,7 @@ const updateUserStatus = async (
       data: result,
     });
   } catch (e: any) {
+    // console.log("error picked...***...",e)
     next(e);
   }
 };

@@ -1,9 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { orderService } from "./orders.service";
 import { string } from "better-auth";
 import { UserRole } from "../../Types/roleCheck";
 
-const createOrders = async (req: Request, res: Response) => {
+const createOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await orderService.createOrders(
       req.body,
@@ -15,12 +19,7 @@ const createOrders = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "create orders error": e,
-      },
-    });
+    next(e);
   }
 };
 
@@ -65,7 +64,7 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
-const updateOrder = async (req: Request, res: Response) => {
+const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
     const result = await orderService.updateOrder(id as string, req.body);
@@ -75,23 +74,21 @@ const updateOrder = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "update order error": e,
-      },
-    });
+    next(e);
   }
 };
 
-const deleteOrder = async (req: Request, res: Response) => {
-  // const email = req.body.email;
-  const id = req.params.id;
-  const result = await orderService.deleteOrder(id as string);
-  res.status(200).send({
-    success: true,
-    data: result,
-  });
+const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const id = req.params.id;
+    const result = await orderService.deleteOrder(id as string);
+    res.status(200).send({
+      success: true,
+      data: result,
+    });
+  } catch (e) {
+    next(e);
+  }
 };
 
 export const orderController = {

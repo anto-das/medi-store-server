@@ -1,9 +1,13 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { sellerService } from "./seller.service";
 import { success } from "better-auth";
 import { Status } from "../../../generated/prisma/enums";
 
-const postMedicine = async (req: Request, res: Response) => {
+const postMedicine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const body = req.body;
     const sellerId = req.user?.id;
@@ -15,13 +19,7 @@ const postMedicine = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "seller medicine created er error:": err,
-      },
-    });
-    console.log(err);
+    next(err);
   }
 };
 
@@ -44,7 +42,11 @@ const getSellerOrders = async (req: Request, res: Response) => {
   }
 };
 
-const updateOrderStatus = async (req: Request, res: Response) => {
+const updateOrderStatus = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const seller_id = req.params.id;
     const status = req.body.status;
@@ -58,16 +60,15 @@ const updateOrderStatus = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "update order status error": e,
-      },
-    });
+    next(e);
   }
 };
 
-const updatedMedicine = async (req: Request, res: Response) => {
+const updatedMedicine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id = req.params.id;
     const body = req.body;
@@ -78,16 +79,15 @@ const updatedMedicine = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "updated medicine error": e,
-      },
-    });
+    next(e);
   }
 };
 
-const deleteMedicine = async (req: Request, res: Response) => {
+const deleteMedicine = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id = req.params.id;
     const result = await sellerService.deleteMedicine(id as string);
@@ -97,12 +97,7 @@ const deleteMedicine = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "delete medicine error": e,
-      },
-    });
+    next(e);
   }
 };
 

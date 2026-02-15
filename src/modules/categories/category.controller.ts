@@ -1,7 +1,11 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { categoryService } from "./category.service";
 
-const postCategory = async (req: Request, res: Response) => {
+const postCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const category = req.body;
     console.log(category);
@@ -11,16 +15,22 @@ const postCategory = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "category post error": e,
-      },
-    });
+    next(
+      res.status(500).send({
+        success: false,
+        message: {
+          "category post error": e,
+        },
+      }),
+    );
   }
 };
 
-const getAllCategories = async (req: Request, res: Response) => {
+const getAllCategories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await categoryService.getAllCategories();
     res.status(200).send({
@@ -29,16 +39,20 @@ const getAllCategories = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).send({
-      success: true,
-      message: {
-        "get all Categories error": err,
-      },
-    });
+    next(
+      res.status(500).send({
+        success: true,
+        message: err,
+      }),
+    );
   }
 };
 
-const deleteCategories = async (req: Request, res: Response) => {
+const deleteCategories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const id = req.params.id;
     const result = await categoryService.deleteCategories(id as string);
@@ -48,12 +62,12 @@ const deleteCategories = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (err) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "delete categories error": err,
-      },
-    });
+    next(
+      res.status(500).send({
+        success: false,
+        message: err,
+      }),
+    );
   }
 };
 

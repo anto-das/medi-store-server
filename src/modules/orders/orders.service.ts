@@ -129,7 +129,7 @@ const updateOrder = async (order_id: string, data: any) => {
 };
 
 const deleteOrder = async (id: string) => {
-  const result = await prisma.orders.deleteMany({
+  const result = await prisma.orders.delete({
     where: {
       order_id: id,
     },
