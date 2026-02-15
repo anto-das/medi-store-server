@@ -1,7 +1,47 @@
+import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
-const getMedicine = async () => {
-  const result = await prisma.medicine.findMany({});
+const getMedicine = async ({
+  search,
+  category_name,
+}: {
+  search: string | undefined;
+  category_name: string | undefined;
+}) => {
+  const filterCondition: MedicineWhereInput[] = [];
+
+  if (search) {
+    filterCondition.push({
+      OR: [
+        {
+          medicine_name: {
+            contains: search as string,
+            mode: "insensitive",
+          },
+        },
+        {
+          manufacturer: {
+            contains: search as string,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  if (category_name) {
+    filterCondition.push({
+      category_name: {
+        contains: category_name as string,
+        mode: "insensitive",
+      },
+    });
+  }
+  const result = await prisma.medicine.findMany({
+    where: {
+      AND: filterCondition,
+    },
+  });
   return result.map((item) => {
     const { categoryId, ...res } = item;
     return res;

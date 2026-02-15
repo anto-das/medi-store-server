@@ -2,7 +2,14 @@ import { NextFunction, Request, Response } from "express";
 import { medicineService } from "./medicine.service";
 
 const getMedicine = async (req: Request, res: Response) => {
-  const result = await medicineService.getMedicine();
+  const { search, category_name } = req.query;
+  const searchStr = typeof search === "string" ? search : undefined;
+  const categoryNameStr =
+    typeof category_name === "string" ? category_name : undefined;
+  const result = await medicineService.getMedicine({
+    search: searchStr,
+    category_name: categoryNameStr,
+  });
   res.status(200).send({
     success: true,
     message: "medicine retrieved successfully..",
