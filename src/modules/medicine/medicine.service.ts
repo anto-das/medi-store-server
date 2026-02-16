@@ -1,12 +1,15 @@
+import { Prisma } from "../../../generated/prisma/client";
 import { MedicineWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 
 const getMedicine = async ({
   search,
   category_name,
+  price,
 }: {
   search: string | undefined;
   category_name: string | undefined;
+  price: string | undefined;
 }) => {
   const filterCondition: MedicineWhereInput[] = [];
 
@@ -37,6 +40,18 @@ const getMedicine = async ({
       },
     });
   }
+  const clientPrice = new Prisma.Decimal(Number(price));
+  const margin = new Prisma.Decimal(0.5 | 0.7 | 1);
+
+  if (price) {
+    filterCondition.push({
+      price: {
+        gte: clientPrice.minus(margin),
+        lte: clientPrice.plus(margin),
+      },
+    });
+  }
+
   const result = await prisma.medicine.findMany({
     where: {
       AND: filterCondition,

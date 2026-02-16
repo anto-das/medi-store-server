@@ -23,7 +23,11 @@ const postMedicine = async (
   }
 };
 
-const getSellerOrders = async (req: Request, res: Response) => {
+const getSellerOrders = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const seller_id = req.user?.id;
     const result = await sellerService.getSellerOrders(seller_id as string);
@@ -33,12 +37,7 @@ const getSellerOrders = async (req: Request, res: Response) => {
       data: result,
     });
   } catch (e) {
-    res.status(500).send({
-      success: false,
-      message: {
-        "get seller order message": e,
-      },
-    });
+    next(e);
   }
 };
 
