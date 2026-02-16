@@ -64,37 +64,37 @@ const getSingleOrder = async (req: Request, res: Response) => {
   }
 };
 
-const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id;
-    const result = await orderService.updateOrder(id as string, req.body);
-    res.status(200).send({
-      success: true,
-      message: "update your order successfully..",
-      data: result,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
+// const updateOrder = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const id = req.params.id;
+//     const result = await orderService.updateOrder(id as string, req.body);
+//     res.status(200).send({
+//       success: true,
+//       message: "update your order successfully..",
+//       data: result,
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// };
 
-const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const id = req.params.id;
-    const result = await orderService.deleteOrder(id as string);
-    res.status(200).send({
-      success: true,
-      data: result,
-    });
-  } catch (e) {
-    next(e);
-  }
-};
+// const deleteOrder = async (req: Request, res: Response, next: NextFunction) => {
+//   try {
+//     const id = req.params.id;
+//     const result = await orderService.deleteOrder(id as string);
+//     res.status(200).send({
+//       success: true,
+//       data: result,
+//     });
+//   } catch (e) {
+//     next(e);
+//   }
+// };
 
 export const orderController = {
   createOrders,
   getAllOrders,
   getSingleOrder,
-  updateOrder,
-  deleteOrder,
+  // updateOrder,
+  // deleteOrder,
 };

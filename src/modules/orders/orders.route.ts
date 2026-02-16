@@ -22,16 +22,16 @@ router.get(
   orderController.getSingleOrder,
 );
 
-router.put(
-  "/:id",
-  roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
-  orderController.updateOrder,
-);
+// router.put(
+//   "/:id",
+//   roleCheckerAuth(UserRole.ADMIN, UserRole.SELLER),
+//   orderController.updateOrder,
+// );
 
-router.delete(
-  "/:id",
-  roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
-  orderController.deleteOrder,
-);
+// router.delete(
+//   "/:id",
+//   roleCheckerAuth(UserRole.CUSTOMER, UserRole.SELLER),
+//   orderController.deleteOrder,
+// );
 
 export const orderRouter = router;

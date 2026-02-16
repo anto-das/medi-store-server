@@ -90,57 +90,57 @@ const getSingleOrder = async (order_id: string) => {
   });
 };
 
-const updateOrder = async (order_id: string, data: any) => {
-  return await prisma.$transaction(async (tx) => {
-    await tx.orders.update({
-      where: {
-        order_id,
-      },
-      data: {
-        total_bill: data.total_bill,
-      },
-    });
+// const updateOrder = async (order_id: string, data: any) => {
+//   return await prisma.$transaction(async (tx) => {
+//     await tx.orders.update({
+//       where: {
+//         order_id,
+//       },
+//       data: {
+//         total_bill: data.total_bill,
+//       },
+//     });
 
-    await Promise.all(
-      data.orderItems.map((item: any) => {
-        return tx.order_item.update({
-          where: { item_id: item.item_id },
-          data: {
-            order_quantity: item.order_quantity,
-            price: Number(item.price),
-          },
-        });
-      }),
-    );
+//     await Promise.all(
+//       data.orderItems.map((item: any) => {
+//         return tx.order_item.update({
+//           where: { item_id: item.item_id },
+//           data: {
+//             order_quantity: item.order_quantity,
+//             price: Number(item.price),
+//           },
+//         });
+//       }),
+//     );
 
-    return await prisma.orders.findUnique({
-      where: { order_id },
-      include: {
-        orderItems: {
-          select: {
-            order_id: true,
-            order_quantity: true,
-            price: true,
-          },
-        },
-      },
-    });
-  });
-};
+//     return await prisma.orders.findUnique({
+//       where: { order_id },
+//       include: {
+//         orderItems: {
+//           select: {
+//             order_id: true,
+//             order_quantity: true,
+//             price: true,
+//           },
+//         },
+//       },
+//     });
+//   });
+// };
 
-const deleteOrder = async (id: string) => {
-  const result = await prisma.orders.delete({
-    where: {
-      order_id: id,
-    },
-  });
-  return result;
-};
+// const deleteOrder = async (id: string) => {
+//   const result = await prisma.orders.delete({
+//     where: {
+//       order_id: id,
+//     },
+//   });
+//   return result;
+// };
 
 export const orderService = {
   createOrders,
   getAllOrders,
   getSingleOrder,
-  updateOrder,
-  deleteOrder,
+  // updateOrder,
+  // deleteOrder,
 };

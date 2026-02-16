@@ -9,7 +9,7 @@ async function seedAdmin() {
   try {
     const adminData = {
       name: process.env.ADMIN_NAME as string,
-      email: "antodasahir@gmail.com",
+      email: process.env.ADMIN_EMAIL as string,
       password: process.env.ADMIN_PASS as string,
       role: UserRole.ADMIN,
       emailVerified: true,
